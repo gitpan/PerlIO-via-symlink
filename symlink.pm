@@ -2,7 +2,7 @@ package PerlIO::via::symlink;
 use 5.008;
 use warnings;
 use strict;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
@@ -22,29 +22,50 @@ writing to the file handle.
 You need to write C"link $name" to the file handle. If the format does
 not match, C<close> will fail with EINVAL.
 
-Currently only writing is supported.
-
 =cut
 
-use Errno qw(EINVAL);
+use Errno qw(EINVAL ENOENT);
 use Symbol qw(gensym);
 
 sub PUSHED {
     $! = EINVAL, return -1
-	unless $_[1] eq 'w';
-    bless gensym(), $_[0];
+	unless $_[1] eq 'w' || $_[1] eq 'r';
+    my $self = bless gensym(), $_[0];
+    *$self->{mode} = $_[1];
+    return $self;
 }
 
-sub OPEN { ${*{$_[0]}}{fname} = $_[1] }
+sub OPEN {
+    my ($self, $fname) = @_;
+    *$self->{fname} = $fname;
+    return 1 if *$self->{mode} eq 'w';
+    lstat ($fname) or return -1;
+    $! = EINVAL, return -1 unless -l $fname;
+    *$self->{content} = 'link '.readlink ($fname);
+    return 1;
+}
 
 sub WRITE {
-    my $buf = $_[1];
-    ${*{$_[0]}}{content} .= $_[1];
+    my ($self, $buf) = @_;
+    *$self->{content} .= $buf;
     return length($buf);
 }
 
+sub FILL {
+    my ($self) = @_;
+    return if *$self->{filled};
+    ++*$self->{filled};
+    return *$self->{content};
+}
+
+sub SEEK {
+    my ($self) = @_;
+    delete *$self->{filled};
+}
+
 sub CLOSE {
-    my ($link, $fname) = @{*{$_[0]}}{qw/content fname/};
+    my ($link, $fname, $mode) = @{*{$_[0]}}{qw/content fname mode/};
+    return 0 if $mode eq 'r';
     $link =~ s/^link // or $! = EINVAL, return -1;
     symlink $link, $fname or return -1;
     return 0;
