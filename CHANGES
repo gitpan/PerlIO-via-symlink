@@ -1,3 +1,7 @@
+[Changes for 0.03 - 10 Nov, 2004]
+
+Skip tests on win32.
+
 [Changes for 0.02 - 9 Aug, 2004]
 
 Support reading symlink.

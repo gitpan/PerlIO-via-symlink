@@ -1,5 +1,9 @@
 #!/usr/bin/perl
-use Test::More tests => 9;
+use Config;
+use Test::More (
+    $Config{d_symlink} ? (tests => 9)
+		       : (skip_all => "symlink not available")
+);
 use PerlIO::via::symlink;
 use strict;
 
