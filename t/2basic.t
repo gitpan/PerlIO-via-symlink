@@ -33,7 +33,7 @@ close $fh or die $!;
 ok ($@ =~ m'Invalid argument');
 
 open $fh, '<:via(symlink)', $fname;
-ok ($! =~ m'Bad file descriptor');
+ok ($! =~ m'Bad file (number|descriptor)');
 
 eval {
 open my $fh, '>:via(symlink)', $fname or die $!;
@@ -44,4 +44,4 @@ close $fh or die $!;
 ok ($@ =~ m'File exists');
 
 open $fh, '<:via(symlink)', $fname;
-ok ($! =~ m'Bad file descriptor');
+ok ($! =~ m'Bad file (number|descriptor)');
