@@ -12,11 +12,11 @@ PerlIO::via::symlink uses the stanard perl module install process:
 * Latest version
 
 The latest PerlIO::via::symlink could be found on cpan or at:
-http://svn.elixus.org/svnweb/repos/browse/member/clkao/PerlIO-via-symlink/
+http://svn.clkao.org/svnweb/member/browse/clkao/PerlIO-via-symlink/
 
 * Copyright
 
-Copyright 2004 by Chia-liang Kao clkao@clkao.org.
+Copyright 2004-2005 by Chia-liang Kao clkao@clkao.org.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

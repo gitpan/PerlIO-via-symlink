@@ -1,5 +1,5 @@
 name: PerlIO-via-symlink
-version: 0.04
+version: 0.05
 abstract: PerlIO layer for symlinks
 author: Chia-liang Kao <clkao@clkao.org>
 license: perl

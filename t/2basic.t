@@ -7,6 +7,9 @@ use Test::More (
 use PerlIO::via::symlink;
 use strict;
 
+use POSIX qw(setlocale LC_ALL);
+setlocale (LC_ALL, 'C');
+
 my $fname = 'symlink-test';
 unlink ($fname);
 open my $fh, '+>:via(symlink)', $fname;
